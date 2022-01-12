@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: math-question-generator
+Version: 1.0.0
+Summary: Generate math questions & answers
+Home-page: UNKNOWN
+Author: Shaun Stocker
+Author-email: s.stocker04@outlook.com
+License: MIT
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.10.1
+Description-Content-Type: text/markdown
+
+## Welcome to my Math Question Generator!
+

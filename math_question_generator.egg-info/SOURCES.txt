@@ -1,0 +1,8 @@
+README.md
+setup.py
+generator/__init__.py
+generator/basic_arithmetic.py
+math_question_generator.egg-info/PKG-INFO
+math_question_generator.egg-info/SOURCES.txt
+math_question_generator.egg-info/dependency_links.txt
+math_question_generator.egg-info/top_level.txt
