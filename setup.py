@@ -14,7 +14,7 @@ setup(
     description="Generate math questions & answers",
     long_description=README,
     long_description_content_type="text/markdown",
-    # url="https://github.com/realpython/reader",
+    url="https://github.com/shaun-ps-04/math_question_generator",
     author="Shaun Stocker",
     author_email="s.stocker04@outlook.com",
     license="MIT",
