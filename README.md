@@ -1,11 +1,16 @@
-## Welcome to Math Question Generator!
+# Welcome to Math Question Generator!
 
-### Basic Usage
------------
+## Installation
+```bash
+pip install math-question-generator
+```
 
+## Usage
+```python
 from generator import basic_arithmetic
-
 print(basic_arithmetic())
+```
+
 -----------
 output:
 {"question": "5 + 14 * 2", "answer": "33"}
