@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="math-question-generator",
-    version="1.0.0",
+    version="1.0.1",
     description="Generate math questions & answers",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -22,7 +22,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
     ],
-    packages=["generator"],
+    packages=["maths_question_generator"],
     include_package_data=True,
     # install_requires=["feedparser", "html2text"],
     # entry_points={
