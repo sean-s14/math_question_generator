@@ -25,9 +25,4 @@ setup(
     packages=["maths_question_generator"],
     include_package_data=True,
     # install_requires=["feedparser", "html2text"],
-    # entry_points={
-    #     "console_scripts": [
-    #         "realpython=reader.__main__:main",
-    #     ]
-    # },
 )

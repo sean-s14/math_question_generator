@@ -1,1 +1,2 @@
-from .basic_arithmetic import basic_arithmetic
+from .arithmetic import Arithmetic
+from .algebra import Algebra

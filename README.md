@@ -7,9 +7,14 @@ pip install math-question-generator
 
 ## Usage
 ```python
-from math_question_generator import basic_arithmetic
-print(basic_arithmetic())
+from maths_question_generator.arithmetic import Arithmetic
+
+a = Arithmetic()
+result = a.basic()
+print(result)
 ```
 
-output:
-{"question": "5 + 14 * 2", "answer": "33"}
+Output:
+```
+{"question": "14 * 2", "answer": "28"}
+```

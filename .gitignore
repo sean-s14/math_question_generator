@@ -3,3 +3,7 @@ Pipfile.lock
 build/
 dist/
 math_question_generator.egg-info/
+test*.py
+todo.md
+how_it_works.md
+.vscode
