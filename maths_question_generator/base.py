@@ -9,10 +9,8 @@ class Base:
         max_eval: float = None,
         min_res: float = 0,
         max_res: float = None,
-        quantity: int = 2,
+        quantity: int or list = [2, 3],
         difficulty: str or list = None
-        # TODO: Set min_qty: int = 2
-        # TODO: Set max_qty: int = 5
         # TODO: decimals: bool = False,
         # TODO: decimal_place: int = 1,
         ):
@@ -34,11 +32,12 @@ class Base:
             The lowest number to be output by the equation
         max_res : float
             The highest number to be output by the equation
-        quantity : int
-            The amount of numbers used in the equation
+        quantity : int or list
+            The quantity of numbers used in the equation
         difficulty : str or list
             The difficulty of the questions. This overrides all other parameters.
         """
+
         self.opers = opers
         self.min_val = min_val
         self.max_val = max_val
@@ -49,8 +48,25 @@ class Base:
         self.quantity = quantity
         self.difficulty = difficulty
 
+        error_messages = {
+            "quantityLow": "Quantity is too low. Choose a number above 1",
+            "quantityHigh": "Quantity is too high. Choose a number below 7",
+            "wrongType": "The value you entered is not of the correct type"
+        }
+
+        if type(quantity) == list:
+            for n in quantity:
+                if   n < 2: raise ValueError(error_messages["quantityLow"])
+                elif n > 6: raise ValueError(error_messages["quantityHigh"])
+        elif type(quantity) == int:
+            if   quantity < 2: raise ValueError(error_messages["quantityLow"])
+            elif quantity > 6: raise ValueError(error_messages["quantityHigh"])
+        else:
+            raise TypeError(error_messages["wrongType"])
+
         self.operations = []
         self.operations.append('+') if 'add' in self.opers else None
         self.operations.append('-') if 'sub' in self.opers else None
         self.operations.append('*') if 'mul' in self.opers else None
         self.operations.append('/') if 'div' in self.opers else None
+

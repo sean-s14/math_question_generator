@@ -6,6 +6,7 @@ def factors(n):
 
 
 def generate_num_from_factors(n):
+    """???"""
     return random.sample(list(factors(int(n))), 1)[0]
 
 

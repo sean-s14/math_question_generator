@@ -23,18 +23,32 @@ class Arithmetic(Base):
             numbers = []
             equation = []
             
-            while len(numbers) < self.quantity:
+            # Determine wether quantity is of type "list" or "int"
+            quantity = self.quantity
+            if type(self.quantity) == list:
+                _ = random.randint(0, len(self.quantity) - 1)
+                quantity = quantity[_]
+
+            while len(numbers) < quantity:
 
                 # ==================== Generate Number ====================
                 if len(equation) > 1 and equation[-1] == '/':
                     # If doing division use factors of previous number to generate random number
                     answer = eval_expression_mul_div(equation)
                     num = generate_num_from_factors(answer)
+                    attempts = 1
+                    for _ in range(0, attempts):
+                        if num == 1:
+                            num = generate_num_from_factors(answer)
                 else:
                     def generate_number(min_val, max_val):
+                        """Generate random number between 2 specified values"""
+                        
                         # 1 | Generate random number
-                        if len(numbers) > 0: num = generate_next_num(min_val, max_val, numbers[-1])
-                        else: num = generate_next_num(min_val, max_val)
+                        if len(numbers) > 0: 
+                            num = generate_next_num(min_val, max_val, numbers[-1])
+                        else: 
+                            num = generate_next_num(min_val, max_val)
 
                         # 2 | Find result of expression so far (only * and /)
                         answer = eval_expression_mul_div(equation + [str(num)])
@@ -57,9 +71,10 @@ class Arithmetic(Base):
                 # ==================== Generate Operation ====================
 
                 # Add operation if the last number in equation has not yet been added
-                if len(numbers) < self.quantity:
+                if len(numbers) < quantity:
                     # 1 | Get the result of the equation so far (only involving * and /)
                     answer = eval_expression_mul_div(equation)
+
                     # 2 | Create copy of operations list
                     operations = list(self.operations)
 
@@ -68,20 +83,26 @@ class Arithmetic(Base):
                     if  numbers[-1] == 0 or int(answer) == 0:
                         operations.remove('/')
 
-                    # 4 | Find number of factors in expression thus far
+                    # 4 | Reduce chances of 1 being followed by multiplication
+                    if numbers[-1] == 1:
+                        _ = random.randint(0, 1)  # 50% Chance
+                        if _ == 0:
+                            operations.remove('*')
+
+                    # 5 | Find number of factors in expression thus far
                     if int(answer) != 0 and '/' in operations:
                         factor_count = len(list(factors(int(answer))))
                         # If there are only 2 factors in factor_count, reduce the 
-                        #   chances of the next operation being division by 50%
+                        #   chances of the next operation being division by 90%
                         if factor_count < 3:
-                            coin_flip = random.randint(0, 1)
-                            if coin_flip == 0:
+                            coin_flip = random.randint(0, 9)  # 90% Chance of removing division 
+                            if coin_flip != 0:
                                 operations.remove('/')
 
-                    # 5 | Choose operation at random
+                    # 6 | Choose operation at random
                     oper = random.choice(operations)
                     
-                    # 6 | Add the operation to the equation
+                    # 7 | Add the operation to the equation
                     equation.append(oper)
 
             question = ' '.join(equation)
