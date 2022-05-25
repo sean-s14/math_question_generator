@@ -10,12 +10,12 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="math-question-generator",
-    version="2.0.0",
+    version="2.1.0",
     description="Generate math questions & answers",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/shaun-ps-04/math_question_generator",
-    author="Shaun Stocker",
+    author="Sean Stocker",
     author_email="s.stocker04@outlook.com",
     license="MIT",
     classifiers=[
