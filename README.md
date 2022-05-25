@@ -9,12 +9,12 @@ pip install math-question-generator
 ```python
 from maths_question_generator.arithmetic import Arithmetic
 
-a = Arithmetic()
-result = a.basic()
+a = Arithmetic(difficulty="easy")
+result = a.base()
 print(result)
 ```
 
 Output:
 ```
-{"question": "14 * 2", "answer": "28"}
+{'question': '16 - 8 + 9', 'answer': 17}
 ```

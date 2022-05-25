@@ -2,7 +2,7 @@ import random
 from .base import Base
 from .arithmetic import Arithmetic
 from .utils import (
-    eval_expression_mul_div, 
+    eval_expression, 
     pass_min_max,
     swap_num_with_placeholder,
 )
