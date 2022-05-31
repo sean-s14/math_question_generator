@@ -41,7 +41,7 @@ def eval_expression(expression):
         eq = eq.split()
     
     # Last Item
-    print("eq :", eq)
+    # print("eq :", eq)
     e = eq[-1]
 
     # Remove final operator
@@ -200,12 +200,14 @@ def generate_next_num(
 
     Parameters
     ----------
-    prev_num : float
-        The last number in the expression
     min_val : float
         The minimum value generated
     max_val : float
         The maximum value generated
+    prev_num : float
+        The last number in the expression
+    final : bool
+        True if this is to be the last number generated
     chance : int
         An integer that represents the chance of the next value being above/below the mean average.
         Example: `chance=50` is equal to `50%`
@@ -232,10 +234,19 @@ def generate_next_num(
     else:
         raise Exception(f"No operation was found in the expression - {expression}")
 
-
     # Evaluate entire expression
     total_eval = int(eval(convertListToStr(expression)))
     # print("Total Evaluation of Expression :", total_eval)
+
+    def print_info():
+        print("\nSymbol :", last_item)
+        print("Is Final?", final)
+        print("Total Evaluation :", total_eval)
+        print("Is total_eval >= min_eval ?", total_eval >= min_eval)
+        print("Is total_eval <= max_eval ?", total_eval <= max_eval)
+        print("Is total_eval >= min_res ?", total_eval >= min_res)
+        print("Is total_eval <= max_res ?", total_eval <= max_res)
+        print()
 
     if last_item == "+":
         # Number could be above or below min_res/min_eval but not above max_eval
@@ -244,18 +255,21 @@ def generate_next_num(
         if total_eval <= max_eval:
             upper_bound = max_eval - total_eval
             upper_bound = max_val if upper_bound > max_val else upper_bound
+            lower_bound = min_eval - total_eval
+            lower_bound = min_eval if lower_bound < min_eval else lower_bound
             if final:
+                # print_info()
                 if total_eval <= max_res:
                     upper_bound = max_res - total_eval
                     upper_bound = max_val if upper_bound > max_val else upper_bound
-            num = random.randint(min_val, upper_bound)
+            num = random.randint(lower_bound, upper_bound)
         if upper_bound < 1: return 0
         num = random.randint(1, upper_bound)
 
     elif last_item == "-":
+
         # Number could be above or below max_res/max_eval but not above min_eval
         # If final then Total will never be less than min_res
-
 
         lower_bound = None
 
@@ -263,7 +277,7 @@ def generate_next_num(
             # Check total_eval against min_eval & max_eval
             # E.g. total_eval= 47 or 60, max_eval=60, min_eval=1
 
-            if final: # Last Number
+            if final:
                 # Check total_eval against min_res & max_res
                 if total_eval < max_res:
                     # E.g. total_eval=37, max_res=40, min_res=10
@@ -278,7 +292,7 @@ def generate_next_num(
                     # E.g. total_eval=40, max_res=40
                     upper_bound = total_eval - min_eval
                     upper_bound = max_val if upper_bound > max_val else upper_bound
-            else: # Not Last Number
+            elif not final:
                 upper_bound = total_eval - min_eval  # 46
                 upper_bound = max_val if upper_bound > max_val else upper_bound
 
@@ -318,38 +332,101 @@ def generate_next_num(
 
     elif last_item == "*":
         # Ensure that the result of multipliying generated number does not exceed max_eval
+        # The result must:
+        # - be more than min_val
+        # - be less than max_val
+        # - evalute to less than max_eval but more than min_eval
+        # - evaluate to less than max_res but more than min_res
+
         num = None
         _ = max_val
         count = 0  # To prevent potential endless loop
+
         # Repeat loop until num is not None
         while num is None:
+            # Examples are underneath each line of code
             test_expression = None  # Reset test_expression
-            test_num = random.randint(1, _)  # TODO: The 1 needs to be changed to min_val at some point
-            print("Test Num :", test_num)
+            test_num = random.randint(min_val + 1, _)
+            # e.g. test_num = 6
+            
             test_expression = convertStrToList(expression.copy())
+            # in="5 + 6 *"
+            # out=["5", "+", "6"]
+            
             test_expression.append(last_item)
+            # in=["5", "+", "6"]
+            # out=["5", "+", "6", "*"]
+
             test_expression.append(str(test_num))
+            # in=["5", "+", "6", "*"]    
+            # out=["5", "+", "6", "*", "6"]
+            
             test_expression = convertListToStr(test_expression)
-            test_total_eval = float(eval(test_expression))
-            if test_total_eval <= max_eval:
-                if final and (test_total_eval <= max_res):
-                    print("\nTest Expression :", test_expression)
-                    print("Test Total Evaluation :", test_total_eval)
-                    print("Max Result :", max_res)
-                    print("Is Total less than Max Result?", test_total_eval <= max_eval)
-                    print("Is Final :", final)
+            # in=["5", "+", "6", "*", "6"]
+            # out="5 + 6 * 6"
+            
+            test_total_res = float(eval(test_expression))
+            # in = "5 + 6 * 6"
+            # out = 41.0
+
+            test_total_eval = float(eval_expression(test_expression))
+            # in = "5 + 6 * 6"
+            # out = 36.0  (only calculates 6 * 6)
+
+            def print_all():
+                print("\nTest Num :", test_num)
+                print("Expression :", test_expression)
+                print("Total Evaluation :", test_total_eval)
+                print("Total Result :", test_total_res)
+                print("Is Total Result <= Max Result?", test_total_res <= max_res)
+                print("Is Total Evaluation <= Max Evaluation?", test_total_eval <= max_eval)
+            
+            # print_all()
+
+            if (test_total_eval >= min_eval) and (test_total_eval <= max_eval):
+                if final:
+                    if (test_total_res >= min_res) and (test_total_res <= max_res):
+                        # print_all()
+                        num = test_num
+                        break
+                elif not final:
                     num = test_num
-                else:
-                    num = test_num
+                    break
+            # elif test_total_eval > max_eval:
+            #     _ = _ - 1
+            #     pass
+
             # If number is too high then test_num becomes the highest number
             _ = test_num
 
             # To prevent potential endless loop
             count += 1
             if count > 20: return 1
+
     elif last_item == "/":
         # Ensure that the number generated is a factor of prev_num
-        num = generate_num_from_factors(prev_num)
+        num = None
+        count = 0
+        while not num:
+            test_num = generate_num_from_factors(prev_num)
+            # print("Test Num :", test_num)
+            if test_num <= max_val:            
+                test_expression = convertStrToList(expression.copy())
+                test_expression.append(last_item)
+                test_expression.append(str(test_num))
+                test_expression = convertListToStr(test_expression)
+                test_total_res = float(eval(test_expression))
+                test_total_eval = float(eval_expression(test_expression))
+
+                if test_total_eval < max_eval:
+                    if final:
+                        if min_res < test_total_res < max_res:
+                            num = test_num
+                    else:
+                        num = test_num
+            count += 1
+            if count > 20:
+                num = test_num
         # TODO: Do more stuff here, e.g. reduce chance of division of prime numbers etc.
 
     return str(num)
@@ -376,43 +453,70 @@ def generate_next_num(
 
 
 def generate_next_oper(
+    max_val: float,
     min_res: float,
     max_res: float,
+    qty: int,
     expression: str or list = None,
     operations: list or str = ["+", "-", "*", "/"],
     negative: bool = False,
     ) -> str:
     """
-    
+    min_res : float
+        
+    max_res : float
+
+    qty : int
+        The quantity of numbers left to generate
+    expression : str or list
+
+    operations: list or str
+
+    negative : bool
     """
     operations = operations.copy()
-    
-    # TODO: If total eval is above max_res then remove addition and multiplication from operations
-    # TODO: If total eval is below min_res then remove subtraction and division from operations
 
     if expression is None:
         raise Exception("No value was entered for expression in generate_next_num function")
-
-    # Change expression to string if list
-    if type(expression) == list:
-        expression = " ".join(expression)
 
     # sub_exp_eval = result_of_final_sub_expression(expression)
     # print("Expression before eval :", expression)    
     total_eval = int(eval(convertListToStr(expression)))
 
-    if (total_eval <= min_res):
-        # E.g. total_eval= -10, min_res=0, operations=["+", "*"]
-        if ("-" in operations):
-            operations.remove('-')
-        if ("/" in operations):
-            operations.remove('/')
-    elif (total_eval >= max_res):
-        # E.g. total_eval= 100, max_res=80, operations=["-", "/"]
-        if ("+" in operations):
-            operations.remove('+')
-        if ("*" in operations):
-            operations.remove('*')
+    list_exp = convertStrToList(expression)
+    prev_oper = None
+    try:
+        prev_oper = list_exp[-2]
+    except Exception as e:
+        # print(e)
+        pass
+
+    # print("\nTotal Eval :", total_eval)
+    # print("Expression :", expression)
+
+    if len(operations) > 2:
+        # Only remove operations if there are more than 2
+        if (total_eval <= min_res):
+            # If after this we cannot add enough for the result to become more 
+            # than min res, then do the following
+            if (qty * max_val) + total_eval < min_res:
+                # print("Possible addition :", (qty * max_val))
+                # print("Not possible to add...")
+                if prev_oper == "*":  # e.g. 19 - 12 * 6
+                    # print("Setting operation to division")
+                    operations = ["/"]
+            else:
+                # print("Possible to add!")
+                if prev_oper != "*":
+                    if ("/" in operations): operations.remove('/')
+                else:
+                    # print("Setting operation to addition & division")
+                    operations = ["+", "/"]
+            if ("-" in operations): operations.remove('-')
+
+        elif (total_eval >= max_res):
+            if ("+" in operations): operations.remove('+')
+            if ("*" in operations): operations.remove('*')
 
     # print("Operations :", operations)
     oper = random.choice(operations)

@@ -77,32 +77,36 @@ class Base:
             self.operations = ["+", "-"]
             self.max_val = 20
             self.max_eval = 60
+            # self.min_res = -20
             self.max_res = 40
             self.quantity = quantity
         elif difficulty == "normal":
-            self.operations = ["+", "-"] #, "*", "/"]
+            self.operations = ["+", "-", "*"] #, "/"]
             self.max_val = 40
             self.max_eval = 120
+            # self.min_res = -40
             self.max_res = 80
             self.quantity = [2, 3, 4]
+            # self.quantity = 4
         elif difficulty == "hard":
-            self.operations = ["+", "-"] #, "*", "/"]
+            self.operations = ["+", "-", "*"] #, "/"]
             self.min_val = min_val  # TODO: -60
             self.max_val = 60
             self.min_eval = min_eval  # TODO: -180
             self.max_eval = 180
             self.min_res = min_res  # TODO: -120
+            # self.min_res = -60
             self.max_res = 120
             self.quantity = [3, 4, 5]
             # TODO: Enable the below attribues
             self.negative = negative  # True
             self.decimals = decimals  # True
 
-        print(
-            "\n====================\nDifficulty :", 
-            self.difficulty[0].upper() + self.difficulty[1:],
-            '\n--------------------',
-            "\nMax Value :", self.max_val,
-            "| Max Evaluation :", self.max_eval,
-            "| Max Result :", self.max_res
-        )
+        # print(
+        #     "\n====================\nDifficulty :", 
+        #     self.difficulty[0].upper() + self.difficulty[1:],
+        #     '\n--------------------',
+        #     "\nMax Value :", self.max_val,
+        #     "| Max Evaluation :", self.max_eval,
+        #     "| Max Result :", self.max_res
+        # )
